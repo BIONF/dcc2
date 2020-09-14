@@ -1,6 +1,6 @@
 # dcc2
 
-DCCv2 is a tool for compiling core set data for [h1s](httsp://github.com/BIONF/HaMStR) using predicted orthologs from OMA, both OMA-browser and OMA-standalone. Outputs of this tool are 3 (optional 4) folders required for a HaMStR run, including (1) core_orthologs (comprises of OMA orthologous group - OG, or OMA pairs - OP. Each OG/OP has its own directory, where a multiple fasta file and a corresponding profile HMM can be found), (2) genome_dir (contains gene sets of taxa, from which the orthologs are originated), (3) blast_dir (holds the blast databases of those gene sets within genome_dir), and an optional (4) weight_dir (contains feature architecure annotations of all gene sets).
+dcc2 is a tool for compiling core set data for [h1s](httsp://github.com/BIONF/HaMStR) using predicted orthologs from OMA, both OMA-browser and OMA-standalone. Outputs of this tool are 3 (optional 4) folders required for a HaMStR run, including (1) core_orthologs (comprises of OMA orthologous group - OG, or OMA pairs - OP. Each OG/OP has its own directory, where a multiple fasta file and a corresponding profile HMM can be found), (2) genome_dir (contains gene sets of taxa, from which the orthologs are originated), (3) blast_dir (holds the blast databases of those gene sets within genome_dir), and an optional (4) weight_dir (contains feature architecure annotations of all gene sets).
 
 # Table of Contents
 * [How to install](#how-to-install)
@@ -8,7 +8,6 @@ DCCv2 is a tool for compiling core set data for [h1s](httsp://github.com/BIONF/H
      * [Setup dcc2](#setup-dcc2)
 * [Usage](#usage)
 * [Bugs](#bugs)
-* [How to cite](#how-to-cite)
 * [Contributors](#contributors)
 * [Contact](#contact)
 
@@ -61,6 +60,17 @@ parseOmaBySpec -n HUMAN,ECOLI -o /output/path/ -j jobName -t pair
 ```
 
 For parsing an output from OMA-standalone, dcc2 requires:
-    - the output orthoXML file from OMA,
-    - a taxon mapping file in tab-delimited format containing 3 columns (blabla) (blabla) (blabla),
-    - protein set of included taxa. This can be either given as a folder, or automatically downloaded from OMA database
+
+- the output orthoXML file from OMA,
+- a taxon mapping file in tab-delimited format containing 3 columns (blabla) (blabla) (blabla),
+- protein set of included taxa. This can be either given as a folder, or automatically downloaded from OMA database
+
+# Bugs
+Any bug reports or comments, suggestions are highly appreciated. Please [open an issue on GitHub](https://github.com/BIONF/dcc2/issues/new) or be in touch via email.
+
+# Contributors
+- [Vinh Tran](https://github.com/trvinh)
+- [Hannah Mülbaier](https://github.com/mueli94)
+
+# Contact
+For further support or bug reports please contact: tran@bio.uni-frankfurt.de
