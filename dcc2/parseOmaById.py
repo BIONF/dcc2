@@ -45,7 +45,7 @@ def getValidSpec(omaGroup, speciesList):
         if spec in " ".join(omaGroup):
             specList.append(spec)
         else:
-            print('\033[92m%s not found in given OMA group\033[0m' % (spec))
+            print('\033[91m%s not found in given OMA group\033[0m' % (spec))
     return(specList)
 
 def getOGprot(omaGroup, speciesList):
