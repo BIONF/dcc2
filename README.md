@@ -15,7 +15,7 @@ dcc2 is a tool for compiling core set data for [h1s](httsp://github.com/BIONF/Ha
 
 *dcc2* is distributed as a python package called *dcc2*. It is compatible with [Python ≥ v3.7](https://www.python.org/downloads/).
 
-## Install the h1s package
+## Install the dcc2 package
 You can install *dcc2* using `pip`:
 ```
 python3 -m pip install dcc2
@@ -32,7 +32,7 @@ and then add the following line to the end of your **~/.bashrc** or **~/.bash_pr
 export PATH=$HOME/.local/bin:$PATH
 ```
 
-## Setup HaMStR-oneSeq
+## Setup dcc2
 
 After installing *dcc2*, you need to run the prepare script to download and parse required OMA browser data.
 
@@ -45,7 +45,7 @@ prepareDcc -o /output/path/for/oma/data
 
 For parsing OMA orthologs by using an OMA group ID:
 ```
-parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o /output/path/ -j jobName
+parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o /output/path/ -j jobName --cpus 8
 ```
 
 Or using list of OMA taxa:
@@ -56,7 +56,7 @@ parseOmaBySpec -n HUMAN,ECOLI,YEAST -o /output/path/ -j jobName --annoFas --cpus
 
 If only 2 OMA taxa are given, you can choose to use OMA pairs instead of OMA groups:
 ```
-parseOmaBySpec -n HUMAN,ECOLI -o /output/path/ -j jobName -t pair
+parseOmaBySpec -n HUMAN,ECOLI -o /output/path/ -j jobName -t pair --cpus 8
 ```
 
 For parsing an output from OMA-standalone, dcc2 requires:
@@ -64,6 +64,10 @@ For parsing an output from OMA-standalone, dcc2 requires:
 - the output orthoXML file from OMA,
 - a taxon mapping file in tab-delimited format containing 3 columns (blabla) (blabla) (blabla),
 - protein set of included taxa. This can be either given as a folder, or automatically downloaded from OMA database
+
+```
+parseOrthoxml blablabla
+```
 
 # Bugs
 Any bug reports or comments, suggestions are highly appreciated. Please [open an issue on GitHub](https://github.com/BIONF/dcc2/issues/new) or be in touch via email.
