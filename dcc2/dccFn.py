@@ -36,11 +36,6 @@ import re
 from datetime import datetime
 from tqdm import tqdm
 
-def subprocess_cmd(commands):
-    for cmd in commands:
-        subprocess.call(cmd, shell = True)
-
-
 def checkFileExist(file):
     if not os.path.exists(os.path.abspath(file)):
         sys.exit('%s not found' % file)
@@ -116,7 +111,7 @@ def getGeneset(dataPath, speciesCode, speciesTaxId, outPath):
         allProteinsLines = allProteins.readlines()
         allProteins.close()
 
-    print('Getting sequences...')
+    print('Getting genomes...')
     for j in tqdm(range(0,len(toDo)), total = len(toDo)):
         name = makeOneSeqSpeciesName(speciesCode[toDo[j]], speciesTaxId[toDo[j]])
         newFile = openFileToWrite(outPath + "/genome_dir/" + name + "/" + name + ".fa")
@@ -196,14 +191,14 @@ def runMsa(args):
             sys.exit('Error running %s' % alignCmd)
 
 def calcAnnoFas(specFile, outPath, cpus):
-    # annoCmd = 'annoFAS --fasta %s --outPath %s/weight_dir --cpus %s' % (specFile, outPath, cpus)
-    # subprocess.call([annoCmd], shell = True)
     from greedyFAS.annoFAS import annoFAS
-    # from greedyFAS.annoFAS import annoModules
     pathconfigfile = annoFAS.__file__.replace('annoFAS/annoFAS.py', 'pathconfig.txt')
     if os.path.exists(pathconfigfile):
         with open(pathconfigfile) as f:
             toolpath = f.readline().strip()
-        annoFAS.runAnnoFas([specFile, outPath, toolpath, False, specFile.split('/')[-1].split('.')[0], 0.0000001, "euk", 0.001, 0.01, 1, '', '', '', cpus])
+        try:
+            annoFAS.runAnnoFas([specFile, outPath, toolpath, False, specFile.split('/')[-1].split('.')[0], 0.0000001, "euk", 0.001, 0.01, 1, '', '', '', cpus])
+        except:
+            sys.exit('Error running annoFAS!')
     else:
         sys.exit('Path config file of greedyFAS not found. Did you run prepareFAS?')

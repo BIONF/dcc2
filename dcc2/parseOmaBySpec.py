@@ -189,6 +189,7 @@ def main():
     doAnno = args.annoFas
     cpus = args.cpus
 
+    start = time.time()
     # check oma pair condition
     if omaType == 'pair':
         if len(speciesList) > 2:
@@ -222,7 +223,6 @@ def main():
     Path(outPath + "/weight_dir").mkdir(parents = True, exist_ok = True)
 
     # do parsing
-    start = time.time()
     parseOma([speciesList, speciesTaxId, outPath, jobName, nrMissingTaxa, omaType, aligTool, doAnno, cpus, dataPath])
     end = time.time()
     print("Finished in " + '{:5.3f}s'.format(end-start))
