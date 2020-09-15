@@ -1,4 +1,7 @@
 # dcc2
+[![PyPI version](https://badge.fury.io/py/dcc2.svg)](https://pypi.org/project/dcc2/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Build Status](https://travis-ci.com/BIONF/dcc2.svg?branch=master)](https://travis-ci.com/BIONF/dcc2)
 
 dcc2 is a tool for compiling core set data for [h1s](httsp://github.com/BIONF/HaMStR) using predicted orthologs from OMA, both OMA-browser and OMA-standalone. Outputs of this tool are 3 (optional 4) folders required for a HaMStR run, including (1) core_orthologs (comprises of OMA orthologous group - OG, or OMA pairs - OP. Each OG/OP has its own directory, where a multiple fasta file and a corresponding profile HMM can be found), (2) genome_dir (contains gene sets of taxa, from which the orthologs are originated), (3) blast_dir (holds the blast databases of those gene sets within genome_dir), and an optional (4) weight_dir (contains feature architecure annotations of all gene sets).
 

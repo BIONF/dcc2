@@ -134,8 +134,8 @@ def parseOma(args):
     pool.close()
 
 def main():
-    version = "1.0.0"
-    parser = argparse.ArgumentParser(description="You are running omaParser by OG ID for OMA Browser version " + str(version) + ".")
+    version = "0.0.1"
+    parser = argparse.ArgumentParser(description="You are running parseOmaById version " + str(version) + ".")
     required = parser.add_argument_group('required arguments')
     required.add_argument('-g', '--OG', help='Input one OMA group ID', action='store', default='', required=True)
     required.add_argument('-n', '--name', help='List of OMA species abbr. names', action='store', default='', required=True)

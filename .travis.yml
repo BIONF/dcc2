@@ -1,13 +1,9 @@
 language: python
 python:
-  - '3.8'
+- '3.8'
 install:
-  - pip install .
+- pip install .
 script: python3 dcc2/prepareDcc.py -h
-# deploy:
-#   provider: pypi
-#   username: "__token__"
-#   password:
-#     secure: uq69z5nwEI3xqpaBtBXb198+mDaawqunZAez9cAFjYZH4X8UYSOC2p+RoEjMGb/2pCkecl+wnNusSKjyvj8E493yZTObWv0klGTjaQwly9bYrxC9G4ubaIvJPbKto6MvmIeVlwUkdeW+zowmWKJ2q4onCr1SFrqMD+IAQoKGaKBv7sXysLRugxMZoAbe13R/U5z8M4E+jzi1nxtceHalIRDBNqm7DVcRvJff5vCIlQ+uKWnmCAgq74AK0i6Z/alJ/yggc0mwUwPxCrvIiMk8WHG5iL3Z/XlVaT2pBie7FxswSpZ7PgCTLK6ZgeGs/uxN0GYoOGNmpTrwMs4MOlPUc2sCfx3ybMZmE6eiFLwJ71RKv2lFjlQOdQS7ifapqcfBNhE6AUo40fbNThAUjDpIUdqxYSneLwzzeizgsZwsGXpPcVV6yEISJHNC2eQMlteo5/TMhrO6hBW+n7wSuGpSovE/DJGjq/facyHWZRlBo6exO3m4ryWl/gme9vQkbs3hot9zpEmzdBnQpfYkj/1WHDal87MwU3vgH1s4E5Uwo0urCHhXcg7BIDnFgTOVQigAEISJTfeITCEdONXXs3NoNRTY7NicZBMCrXbCe9Mh8SwFBp01EeU6fjBmx05r8heBRBTs4jPVXadpQ042RL94c/Nrdx7wjS6r5QA/v5aeLBw=
-#   on:
-#     tags: true
+deploy:
+  password:
+    secure: kdhFVjnkTGhrWYsp4/f4jJcZuHSnxjTrNpfluJPW2J90JOK/Qs6cquPXZY1kALEbqJf6c84qBy0K5WlZ/XZ1Ui6n45/PXj0UgkVg4OOwDgWYUQUFB2aOwMaZK7sZEptZOdQaLAMvh2K+iJA3yFkOl6mR25XI+NuahWx2ppnNvghq6AjBQVXaatAhjtVZwA1sIVPNgQPd5t3l9vCTtlRVkfgIUtUD9WzbV26w6/R3+6+6dw1jsWML88o8peqeuSd5KFEyfKIXVj4XxqisRtNwddUhFpoUe7aAfKFZlfr2FpcCVA0L4Jd1ikOp8EZPWEtQJJfbj/JmruAKFFln64hQYEsAlYx5nUx7WK40AyRW75Rb+uKB7hu2viLco3X4pfagtHWLtX5SHjaJAKG+9sIgjOn/yqSJtcQ+vcLpYogd9+xj0wKaMHfegUw47wFGo5EN0Kjwhs6AVjh8XRHnePmcwxfSIOpAC1BMsHKloJWbUAUJi/b1sg3CWPmsQ8/b5U75Evu+VAXw8t8ROSWmTdQ+k7fI9wkXPF+BKztXplOPFAJnxRu4TcZTcB4xWKMq4rOYI0oUd8bqEeBVeI4TGTV2MPIJyPUG+vVTj/wX6H8o4lHs2dcjAoe9GSTlpfrld3wPq66o7x/mU+pD2hUlzAHTbpAHx21cSU7PW1LMz6k9GF0=
