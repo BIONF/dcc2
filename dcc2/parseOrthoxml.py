@@ -60,6 +60,7 @@ def main():
     optional.add_argument('-a', '--alignTool', help='Alignment tool (mafft|muscle). Default: mafft', action='store', default='mafft')
     optional.add_argument('-f', '--annoFas', help='Perform FAS annotation', action='store_true')
     optional.add_argument('-l', '--maxGroups', help='Maximum ortholog groups taken into account.', type=int, action='store', default=999999999)
+    optional.add_argument('-c', '--cpus', help='Number of CPUs. Default: 4', action='store', default=4, type=int)
     args = parser.parse_args()
 
     inFile = args.inFile
@@ -79,9 +80,15 @@ def main():
     limit = args.maxGroups
     doAnno = args.annoFas
     jobName = args.jobName
+    cpus = args.cpus
 
     start = time.time()
-    pool = mp.Pool(mp.cpu_count()-2)
+    # create job pool
+    pool = mp.Pool(cpus)
+    if cpus > (mp.cpu_count()):
+        print('Reduce the given number of CPUs to %s' % (mp.cpu_count()))
+        pool = mp.Pool(mp.cpu_count())
+
     ##### read mapping file
     (name2id, name2abbr) = readFileToDict(mappingFile)
 
@@ -125,8 +132,7 @@ def main():
             concatFasta(specFile, fileInGenome)
         fileInBlast = "%s/blast_dir/%s/%s.fa" % (outPath, specName, specName)
         if not Path(fileInBlast).exists():
-            lnCmd1 = 'ln -fs %s %s' % (fileInGenome, fileInBlast)
-            subprocess.call([lnCmd1], shell = True)
+            os.symlink(fileInGenome, fileInBlast)
         Path(outPath + "/weight_dir/" + specName).mkdir(parents = True, exist_ok = True)
         # get info for blast
         blastDbFile = "%s/blast_dir/%s/%s.phr" % (outPath, specName, specName)
@@ -135,7 +141,7 @@ def main():
         # get info for FAS annotation
         annoFile = "%s/weight_dir/%s.json" % (outPath, specName)
         if not Path(annoFile).exists():
-            annoJobs.append([specFile, outPath])
+            annoJobs.append(specFile)
 
         # save OG members and their spec name to dict
         for gene in spec.findAll("gene"):
@@ -193,9 +199,13 @@ def main():
     ### create MSAs and pHMMs
     print("Calculating MSAs and pHMMs for %s OGs..." % (len(alignJobs)))
     # if dccFn.is_tool(aligTool + " -h"):
-    msa = pool.map(dccFn.runMsa, alignJobs)
+    msaOut = []
+    for _ in tqdm(pool.imap_unordered(dccFn.runMsa, alignJobs), total=len(alignJobs)):
+        msaOut.append(_)
     if dccFn.is_tool('hmmbuild'):
-        phmm = pool.map(dccFn.runHmm, hmmJobs)
+        hmmOut = []
+        for _ in tqdm(pool.imap_unordered(dccFn.runHmm, hmmJobs), total=len(hmmJobs)):
+            hmmOut.append(_)
     else:
         print("hmmbuild not found!")
 
@@ -203,7 +213,8 @@ def main():
     if doAnno:
         print("Doing FAS annotation...")
         if dccFn.is_tool('annoFAS'):
-            anno = pool.map(dccFn.calcAnnoFas, annoJobs)
+            for specFile in annoJobs:
+                dccFn.calcAnnoFas(specFile, outPath, cpus)
 
     pool.close()
     end = time.time()
