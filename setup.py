@@ -27,7 +27,7 @@ with open("README.md", "r") as input:
 
 setup(
     name="dcc2",
-    version="0.0.2",
+    version="0.0.3",
     python_requires='>=3.7.0',
     description="Dynamic core ortholog compilation tool",
     long_description=long_description,
