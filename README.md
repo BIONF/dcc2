@@ -56,7 +56,7 @@ parseOmaBySpec -n HUMAN,ECOLI,YEAST -o /output/path/ -j jobName --annoFas --cpus
 
 If only 2 OMA taxa are given, you can choose to use OMA pairs instead of OMA groups:
 ```
-parseOmaBySpec -n HUMAN,ECOLI -o /output/path/ -j jobName -t pair --cpus 8
+parseOmaBySpec -n HUMAN,ECOLI -t pair -o /output/path/ -j jobName --annoFAS --cpus 8
 ```
 
 For parsing an output from OMA-standalone, dcc2 requires:
@@ -66,7 +66,7 @@ For parsing an output from OMA-standalone, dcc2 requires:
 - protein set of included taxa. This can be either given as a folder, or automatically downloaded from OMA database
 
 ```
-parseOrthoxml -i input.orthoxml -o /output/path/ -g /path/to/gene/set -m mapping_file.txt -j jobName
+parseOrthoxml -i input.orthoxml -m mapping_file.txt -g /path/to/gene/set -o /output/path/ -j jobName --annoFas --cpus 8
 ```
 
 # Bugs
