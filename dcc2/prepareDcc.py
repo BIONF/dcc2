@@ -174,15 +174,15 @@ def checkOmaData(dataPath):
             sys.exit('%s is empty!' % (dataPath + '/' + f))
 
 def getPath(dccPath):
-    if os.path.exists(dccPath + 'pathconfig.txt'):
-        with open(greedyFasPath+'/pathconfig.txt', 'r') as file:
+    if os.path.exists(dccPath + '/pathconfig.txt'):
+        with open(dccPath+'/pathconfig.txt', 'r') as file:
             savedPath = file.read().strip()
             return(savedPath)
     else:
         return('Pathconfig file not found')
 
 def main():
-    version = "0.0.3"
+    version = "0.0.4"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')
@@ -216,9 +216,9 @@ def main():
     if get:
         if not savedPath == 'Pathconfig file not found':
             checkOmaData(savedPath)
-            sys.exit('OMA Browser data can be found at %s. dcc2 is ready to run!' % savedPath)
+            sys.exit('OMA Browser data can be found at\n%s' % savedPath)
         else:
-            sys.exit('OMA Browser data may not yet exist (pathconfig file not found)!')
+            sys.exit('ERROR: OMA Browser data may not yet exist (pathconfig file not found)!')
 
     # download and process oma data
     if not savedPath == 'Pathconfig file not found':
