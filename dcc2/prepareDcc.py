@@ -216,9 +216,10 @@ def main():
     if get:
         if not savedPath == 'Pathconfig file not found':
             checkOmaData(savedPath)
-            sys.exit('OMA Browser data can be found at\n%s' % savedPath)
+            print('OMA Browser data can be found at\n%s' % savedPath)
         else:
-            sys.exit('ERROR: OMA Browser data may not yet exist (pathconfig file not found)!')
+            print('ERROR: OMA Browser data may not yet exist (pathconfig file not found)!')
+        sys.exit()
 
     # download and process oma data
     if not savedPath == 'Pathconfig file not found':
