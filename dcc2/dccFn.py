@@ -197,7 +197,7 @@ def calcAnnoFas(specFile, outPath, cpus):
         with open(pathconfigfile) as f:
             toolpath = f.readline().strip()
         try:
-            annoFAS.runAnnoFas([specFile, outPath, toolpath, False, specFile.split('/')[-1].split('.')[0], 0.0000001, "euk", 0.001, 0.01, 1, '', '', '', cpus])
+            annoFAS.runAnnoFas([specFile, outPath + '/weight_dir', toolpath, False, specFile.split('/')[-1].split('.')[0], 0.0000001, "euk", 0.001, 0.01, 1, '', '', '', cpus])
         except:
             sys.exit('Error running annoFAS!')
     else:
