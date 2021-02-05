@@ -161,7 +161,7 @@ def runBlast(args):
         subprocess.call([blastCmd], shell = True)
     except:
         sys.exit('Error running %s' % blastCmd)
-    fileInGenome = "%s/genome_dir/%s/%s.fa" % (outPath, specName, specName)
+    fileInGenome = "../../genome_dir/%s/%s.fa" % (specName, specName)
     fileInBlast = "%s/blast_dir/%s/%s.fa" % (outPath, specName, specName)
     if not Path(fileInBlast).exists():
         os.symlink(fileInGenome, fileInBlast)

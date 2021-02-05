@@ -48,8 +48,8 @@ def concatFasta(fileIn, fileOut):
      subprocess.call([cmd], shell = True)
 
 def main():
-    version = "0.0.1"
-    parser = argparse.ArgumentParser(description="You are running parseOrthoxml version " + str(version) + ".")
+    version = "0.0.7"
+    parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')
     required.add_argument('-i', '--inFile', help='Input sequence in orthoXML format', action='store', default='', required=True)
