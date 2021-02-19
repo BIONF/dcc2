@@ -40,14 +40,14 @@ jobs:
         pip install .
         dcc.prepare -h
         
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
+#  deploy:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: Set up Python
+#      uses: actions/setup-python@v2
+#      with:
+#        python-version: '3.8'
     - uses: casperdcl/deploy-pypi@v2
       with:
         password: ${{ secrets.pypi }}
