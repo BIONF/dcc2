@@ -6,6 +6,8 @@ name: dcc2 package
 on:
   push:
     branches: [ master ]
+    tags:
+    - '*'
   pull_request:
     branches: [ master ]
 
