@@ -41,25 +41,25 @@ After installing *dcc2*, you need to run the prepare script to download and pars
 
 You can do it by running this command
 ```
-prepareDcc -o /output/path/for/oma/data
+dcc2.prepare -o /output/path/for/oma/data
 ```
 
 # Usage
 
 For parsing OMA orthologs by using an OMA group ID:
 ```
-parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o /output/path/ -j jobName --cpus 8
+dcc2.parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o /output/path/ -j jobName --cpus 8
 ```
 
 Or using list of OMA taxa:
 
 ```
-parseOmaBySpec -n HUMAN,ECOLI,YEAST -o /output/path/ -j jobName --annoFas --cpus 8
+dcc2.parseOmaBySpec -n HUMAN,ECOLI,YEAST -o /output/path/ -j jobName --annoFas --cpus 8
 ```
 
 If only 2 OMA taxa are given, you can choose to use OMA pairs instead of OMA groups:
 ```
-parseOmaBySpec -n HUMAN,ECOLI -t pair -o /output/path/ -j jobName --annoFAS --cpus 8
+dcc2.parseOmaBySpec -n HUMAN,ECOLI -t pair -o /output/path/ -j jobName --annoFAS --cpus 8
 ```
 
 For parsing an output from OMA-standalone, dcc2 requires:
@@ -69,7 +69,7 @@ For parsing an output from OMA-standalone, dcc2 requires:
 - protein set of included taxa. This can be either given as a folder, or automatically downloaded from OMA database
 
 ```
-parseOrthoxml -i input.orthoxml -m mapping_file.txt -g /path/to/gene/set -o /output/path/ -j jobName --annoFas --cpus 8
+dcc2.parseOrthoxml -i input.orthoxml -m mapping_file.txt -g /path/to/gene/set -o /output/path/ -j jobName --annoFas --cpus 8
 ```
 
 # Bugs
