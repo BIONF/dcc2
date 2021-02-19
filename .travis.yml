@@ -4,10 +4,10 @@ python:
 install:
   - pip install .
 script: python3 dcc2/prepareDcc.py -h
-deploy:
-  provider: pypi
-  username: "__token__"
-  password:
-    secure: kdhFVjnkTGhrWYsp4/f4jJcZuHSnxjTrNpfluJPW2J90JOK/Qs6cquPXZY1kALEbqJf6c84qBy0K5WlZ/XZ1Ui6n45/PXj0UgkVg4OOwDgWYUQUFB2aOwMaZK7sZEptZOdQaLAMvh2K+iJA3yFkOl6mR25XI+NuahWx2ppnNvghq6AjBQVXaatAhjtVZwA1sIVPNgQPd5t3l9vCTtlRVkfgIUtUD9WzbV26w6/R3+6+6dw1jsWML88o8peqeuSd5KFEyfKIXVj4XxqisRtNwddUhFpoUe7aAfKFZlfr2FpcCVA0L4Jd1ikOp8EZPWEtQJJfbj/JmruAKFFln64hQYEsAlYx5nUx7WK40AyRW75Rb+uKB7hu2viLco3X4pfagtHWLtX5SHjaJAKG+9sIgjOn/yqSJtcQ+vcLpYogd9+xj0wKaMHfegUw47wFGo5EN0Kjwhs6AVjh8XRHnePmcwxfSIOpAC1BMsHKloJWbUAUJi/b1sg3CWPmsQ8/b5U75Evu+VAXw8t8ROSWmTdQ+k7fI9wkXPF+BKztXplOPFAJnxRu4TcZTcB4xWKMq4rOYI0oUd8bqEeBVeI4TGTV2MPIJyPUG+vVTj/wX6H8o4lHs2dcjAoe9GSTlpfrld3wPq66o7x/mU+pD2hUlzAHTbpAHx21cSU7PW1LMz6k9GF0=
-  on:
-    tags: true
+# deploy:
+#   provider: pypi
+#   username: "__token__"
+#   password:
+#     secure: kdhFVjnkTGhrWYsp4/f4jJcZuHSnxjTrNpfluJPW2J90JOK/Qs6cquPXZY1kALEbqJf6c84qBy0K5WlZ/XZ1Ui6n45/PXj0UgkVg4OOwDgWYUQUFB2aOwMaZK7sZEptZOdQaLAMvh2K+iJA3yFkOl6mR25XI+NuahWx2ppnNvghq6AjBQVXaatAhjtVZwA1sIVPNgQPd5t3l9vCTtlRVkfgIUtUD9WzbV26w6/R3+6+6dw1jsWML88o8peqeuSd5KFEyfKIXVj4XxqisRtNwddUhFpoUe7aAfKFZlfr2FpcCVA0L4Jd1ikOp8EZPWEtQJJfbj/JmruAKFFln64hQYEsAlYx5nUx7WK40AyRW75Rb+uKB7hu2viLco3X4pfagtHWLtX5SHjaJAKG+9sIgjOn/yqSJtcQ+vcLpYogd9+xj0wKaMHfegUw47wFGo5EN0Kjwhs6AVjh8XRHnePmcwxfSIOpAC1BMsHKloJWbUAUJi/b1sg3CWPmsQ8/b5U75Evu+VAXw8t8ROSWmTdQ+k7fI9wkXPF+BKztXplOPFAJnxRu4TcZTcB4xWKMq4rOYI0oUd8bqEeBVeI4TGTV2MPIJyPUG+vVTj/wX6H8o4lHs2dcjAoe9GSTlpfrld3wPq66o7x/mU+pD2hUlzAHTbpAHx21cSU7PW1LMz6k9GF0=
+#   on:
+#     tags: true

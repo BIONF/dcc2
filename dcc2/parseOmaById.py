@@ -134,7 +134,7 @@ def parseOma(args):
     pool.close()
 
 def main():
-    version = "0.0.9"
+    version = "0.1.0"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     required.add_argument('-g', '--OG', help='Input one OMA group ID', action='store', default='', required=True)
