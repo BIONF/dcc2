@@ -48,7 +48,9 @@ jobs:
 #      uses: actions/setup-python@v2
 #      with:
 #        python-version: '3.8'
-    - uses: casperdcl/deploy-pypi@v2
+    - name: Deploy
+      if: startsWith(github.event.ref, 'refs/tags')
+      uses: casperdcl/deploy-pypi@v2
       with:
         password: ${{ secrets.pypi }}
         build: true
