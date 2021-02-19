@@ -6,17 +6,17 @@ name: dcc2 package
 on:
   push:
     branches: [ master ]
+    tags:
+    - '*'
   pull_request:
     branches: [ master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.8]
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -37,4 +37,20 @@ jobs:
     - name: Test
       run: |
         pwd
+        pip install .
         dcc.prepare -h
+        
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - uses: casperdcl/deploy-pypi@v2
+      with:
+        password: ${{ secrets.pypi }}
+        build: true
+        # only upload if a tag is pushed (otherwise just build & check)
+        upload: ${{ github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') }}
