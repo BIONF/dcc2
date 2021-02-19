@@ -37,4 +37,5 @@ jobs:
     - name: Test
       run: |
         pwd
+        pip install .
         dcc.prepare -h
