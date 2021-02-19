@@ -32,6 +32,7 @@ import subprocess
 from Bio import SeqIO
 import multiprocessing as mp
 import dcc2.dccFn as dccFn
+from tqdm import tqdm
 
 def readFileToDict(file):
     name2id = {}
@@ -48,7 +49,7 @@ def concatFasta(fileIn, fileOut):
      subprocess.call([cmd], shell = True)
 
 def main():
-    version = "0.0.7"
+    version = "0.0.8"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')

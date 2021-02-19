@@ -27,7 +27,7 @@ with open("README.md", "r") as input:
 
 setup(
     name="dcc2",
-    version="0.0.7",
+    version="0.0.8",
     python_requires='>=3.7.0',
     description="Dynamic core ortholog compilation tool",
     long_description=long_description,
@@ -45,10 +45,10 @@ setup(
         'tqdm'
     ],
     entry_points={
-        'console_scripts': ["prepareDcc = dcc2.prepareDcc:main",
-                            "parseOrthoxml = dcc2.parseOrthoxml:main",
-                            "parseOmaById = dcc2.parseOmaById:main",
-                            "parseOmaBySpec = dcc2.parseOmaBySpec:main"],
+        'console_scripts': ["dcc.prepare = dcc2.prepareDcc:main",
+                            "dcc.parseOrthoxml = dcc2.parseOrthoxml:main",
+                            "dcc.parseOmaById = dcc2.parseOmaById:main",
+                            "dcc.parseOmaBySpec = dcc2.parseOmaBySpec:main"],
     },
     license="GPL-3.0",
     classifiers=[
