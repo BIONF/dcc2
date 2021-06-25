@@ -49,7 +49,7 @@ def concatFasta(fileIn, fileOut):
      subprocess.call([cmd], shell = True)
 
 def main():
-    version = "0.1.0"
+    version = "0.1.1"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')
@@ -213,7 +213,7 @@ def main():
     # do FAS annotation
     if doAnno:
         print("Doing FAS annotation...")
-        if dccFn.is_tool('annoFAS'):
+        if dccFn.is_tool('fas.doAnno'):
             for specFile in annoJobs:
                 dccFn.calcAnnoFas(specFile, outPath, cpus)
 

@@ -158,14 +158,14 @@ def parseOma(args):
     ### do FAS annotation
     if doAnno:
         print("Doing FAS annotation...")
-        if dccFn.is_tool('annoFAS'):
+        if dccFn.is_tool('fas.doAnno'):
             for specFile in annoJobs:
                 dccFn.calcAnnoFas(specFile, outPath, cpus)
 
     pool.close()
 
 def main():
-    version = "0.1.0"
+    version = "0.1.1"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     required.add_argument('-n', '--name', help='List of OMA species abbr. names', action='store', default='', required=True)

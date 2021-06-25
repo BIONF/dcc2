@@ -182,7 +182,7 @@ def getPath(dccPath):
         return('Pathconfig file not found')
 
 def main():
-    version = "0.1.0"
+    version = "0.1.1"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')
