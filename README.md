@@ -66,7 +66,7 @@ dcc2.parseOmaBySpec -n HUMAN,ECOLI -t pair -o /output/path/ -j jobName --annoFAS
 For parsing an output from OMA-standalone, dcc2 requires:
 
 - the output orthoXML file from OMA,
-- a taxon mapping file in tab-delimited format containing 3 columns `<NCBI taxon ID>   <Original taxon name>   <Abbr. taxon name>`, where *original taxon name* is the name that is written in the orthoXML input file and *abbr. taxon name* is its abbreviation spcide code (for example: HOMSA for *Homo sapiens*)
+- a taxon mapping file in tab-delimited format containing 3 columns `<NCBI taxon ID>   <Original taxon name>   <Abbr. taxon name>`, where *original taxon name* is the name that is written in the orthoXML input file and *abbr. taxon name* is its abbreviation species code (for example: HOMSA for *Homo sapiens*)
 - protein set of included taxa. This can be either given as a folder, or automatically downloaded from OMA database
 
 ```
