@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 #######################################################################
-# Copyright (C) 2020 Vinh Tran
+# Copyright (C) 2021 Vinh Tran
 #
 #  This file is part of dcc2.
 #
@@ -47,6 +47,8 @@ def readFileToDict(file):
 def concatFasta(fileIn, fileOut):
      cmd = "awk \'/^>/ { print (NR==1 ? \"\" : RS) $0; next } { printf \"%s\", $0 } END { printf RS }\' " + fileIn + " > " + fileOut
      subprocess.call([cmd], shell = True)
+     replacePipe = "sed -i 's/|/_/g' " + fileOut
+     subprocess.call([replacePipe], shell = True)
 
 def main():
     version = "0.2.0"
@@ -61,6 +63,7 @@ def main():
     optional.add_argument('-a', '--alignTool', help='Alignment tool (mafft|muscle). Default: mafft', action='store', default='mafft')
     optional.add_argument('-f', '--annoFas', help='Perform FAS annotation', action='store_true')
     optional.add_argument('-l', '--maxGroups', help='Maximum ortholog groups taken into account.', type=int, action='store', default=999999999)
+    optional.add_argument('-t', '--minTaxa', help='Number of taxa should be included. Default: all', action='store', default=0, type=int)
     optional.add_argument('-c', '--cpus', help='Number of CPUs. Default: 4', action='store', default=4, type=int)
     args = parser.parse_args()
 
@@ -79,6 +82,7 @@ def main():
     if not (aligTool == "mafft" or aligTool == "muscle"):
         sys.exit("alignment tool must be either mafft or muscle")
     limit = args.maxGroups
+    minTaxa = args.minTaxa
     doAnno = args.annoFas
     jobName = args.jobName
     cpus = args.cpus
@@ -92,6 +96,8 @@ def main():
 
     ##### read mapping file
     (name2id, name2abbr) = readFileToDict(mappingFile)
+    if minTaxa == 0:
+        minTaxa = len(name2id)
 
     ##### read input file into beatifulsoup object
     print("Reading input XML file...")
@@ -115,41 +121,42 @@ def main():
     annoJobs = []
     for spec in xmlIn.findAll("species"):
         specNameOri = spec.get("name")
-        if not specNameOri in name2abbr:
-            sys.exit("%s not found in %s" % (specNameOri, mappingFile))
-        specName = "%s@%s@1" % (name2abbr[specNameOri], name2id[specNameOri])
-        Path(outPath + "/genome_dir/" + specName).mkdir(parents = True, exist_ok = True)
-        Path(outPath + "/blast_dir/" + specName).mkdir(parents = True, exist_ok = True)
-        # get gene set file
-        lsCmd = 'ls %s/%s.*' % (dataPath, specNameOri)
-        specFile = subprocess.check_output([lsCmd], shell = True).decode(sys.stdout.encoding).strip()
-        fileExt = specFile.split(".")[-1]
-        # read fasta file to dictionary
-        fasta[specName] = SeqIO.to_dict(SeqIO.parse(open(specFile),'fasta'))
+        # if not specNameOri in name2abbr:
+        #     sys.exit("%s not found in %s" % (specNameOri, mappingFile))
+        if specNameOri in name2abbr:
+            specName = "%s@%s@1" % (name2abbr[specNameOri], name2id[specNameOri])
+            Path(outPath + "/genome_dir/" + specName).mkdir(parents = True, exist_ok = True)
+            Path(outPath + "/blast_dir/" + specName).mkdir(parents = True, exist_ok = True)
+            # get gene set file
+            lsCmd = 'ls %s/%s.*' % (dataPath, specNameOri)
+            specFile = subprocess.check_output([lsCmd], shell = True).decode(sys.stdout.encoding).strip()
+            fileExt = specFile.split(".")[-1]
+            # read fasta file to dictionary
+            fasta[specName] = SeqIO.to_dict(SeqIO.parse(open(specFile),'fasta'))
 
-        # copy to genome_dir/specName/specName.fa and make smybolic link to blast_dir/specName, weight_dir/specName
-        fileInGenome = "%s/genome_dir/%s/%s.fa" % (outPath, specName, specName)
-        if not Path(fileInGenome).exists():
-            concatFasta(specFile, fileInGenome)
-        fileInBlast = "%s/blast_dir/%s/%s.fa" % (outPath, specName, specName)
-        if not Path(fileInBlast).exists():
-            os.symlink(fileInGenome, fileInBlast)
-        Path(outPath + "/weight_dir/" + specName).mkdir(parents = True, exist_ok = True)
-        # get info for blast
-        blastDbFile = "%s/blast_dir/%s/%s.phr" % (outPath, specName, specName)
-        if not Path(blastDbFile).exists():
-            blastJobs.append([specName, specFile, outPath])
-        # get info for FAS annotation
-        annoFile = "%s/weight_dir/%s.json" % (outPath, specName)
-        if not Path(annoFile).exists():
-            annoJobs.append(specFile)
+            # copy to genome_dir/specName/specName.fa and make smybolic link to blast_dir/specName, weight_dir/specName
+            fileInGenome = "%s/genome_dir/%s/%s.fa" % (outPath, specName, specName)
+            if not Path(fileInGenome).exists():
+                concatFasta(specFile, fileInGenome)
+            fileInBlast = "%s/blast_dir/%s/%s.fa" % (outPath, specName, specName)
+            if not Path(fileInBlast).exists():
+                os.symlink(fileInGenome, fileInBlast)
+            Path(outPath + "/weight_dir/" + specName).mkdir(parents = True, exist_ok = True)
+            # get info for blast
+            blastDbFile = "%s/blast_dir/%s/%s.phr" % (outPath, specName, specName)
+            if not Path(blastDbFile).exists():
+                blastJobs.append([specName, specFile, outPath])
+            # get info for FAS annotation
+            annoFile = "%s/weight_dir/%s.json" % (outPath, specName)
+            if not Path(annoFile).exists():
+                annoJobs.append(specFile)
 
-        # save OG members and their spec name to dict
-        for gene in spec.findAll("gene"):
-            groupID = gene.get("id")
-            orthoID = gene.get("protId")
-            taxonName[orthoID] = specName
-            protID[groupID] = orthoID
+            # save OG members and their spec name to dict
+            for gene in spec.findAll("gene"):
+                groupID = gene.get("id")
+                orthoID = gene.get("protId")
+                taxonName[orthoID] = specName
+                protID[groupID] = orthoID
 
     # make blastDB
     print("Creating BLAST databases...")
@@ -166,36 +173,46 @@ def main():
     for orthogroup in xmlIn.findAll("orthologGroup"):
         groupID = orthogroup.get("id")
         if groupID:
+            taxCount = 0
+            ogSeqs = {}
             n = n + 1
             if (n > limit):
                 break
             if groupID.isdigit():
                 groupID = "OG_"+str(groupID)
-            Path(outPath + "/core_orthologs/" + jobName + groupID).mkdir(parents = True, exist_ok = True)
-
-            # get fasta sequences
-            with open(outPath + "/core_orthologs/" + jobName + "/" + groupID + "/" + groupID + ".fa", "w") as myfile:
-                for ortho in orthogroup.findAll("geneRef"):
+            ogSeqs[groupID] = []
+            for ortho in orthogroup.findAll("geneRef"):
+                if ortho.get("id") in protID:
                     orthoID = protID[ortho.get("id")]
-                    spec = taxonName[orthoID]
-                    orthoSeq = str(fasta[spec][orthoID].seq)
-                    myfile.write(">" + groupID + "|" + spec + "|" + orthoID + "\n" + orthoSeq + "\n")
+                    if orthoID in taxonName:
+                        taxCount = taxCount + 1
+                        spec = taxonName[orthoID]
+                        orthoSeq = str(fasta[spec][orthoID].seq)
+                        orthoIDmod = orthoID.replace("|", "_")
+                        seqID = ">" + groupID + "|" + spec + "|" + orthoIDmod
+                        ogSeqs[groupID].append(seqID + '\n' + orthoSeq)
+            # check if group contains enough taxa
+            if taxCount >= minTaxa:
+                Path(outPath + "/core_orthologs/" + jobName + '/' + groupID).mkdir(parents = True, exist_ok = True)
+                # write fasta sequences
+                with open(outPath + "/core_orthologs/" + jobName + "/" + groupID + "/" + groupID + ".fa", "w") as myfile:
+                    myfile.write('\n'.join(ogSeqs[groupID]))
 
-            # get info for MSA
-            ogFasta = outPath + "/core_orthologs/" + jobName + "/" + groupID + "/" + groupID
-            alignJobs.append([ogFasta, aligTool, groupID])
+                # get info for MSA
+                ogFasta = outPath + "/core_orthologs/" + jobName + "/" + groupID + "/" + groupID
+                alignJobs.append([ogFasta, aligTool, groupID])
 
-            # get info for pHMM
-            Path(outPath + "/core_orthologs/" + jobName + "/" + groupID + "/hmm_dir").mkdir(parents = True, exist_ok = True)
-            hmmFile = "%s/core_orthologs/%s/%s/hmm_dir/%s.hmm" % (outPath, jobName, groupID, groupID)
-            flag = 0
-            try:
-                if os.path.getsize(hmmFile) == 0:
-                    flag = 1
-            except OSError as e:
-                    flag = 1
-            if flag == 1:
-                hmmJobs.append([hmmFile, ogFasta, groupID])
+                # get info for pHMM
+                Path(outPath + "/core_orthologs/" + jobName + "/" + groupID + "/hmm_dir").mkdir(parents = True, exist_ok = True)
+                hmmFile = "%s/core_orthologs/%s/%s/hmm_dir/%s.hmm" % (outPath, jobName, groupID, groupID)
+                flag = 0
+                try:
+                    if os.path.getsize(hmmFile) == 0:
+                        flag = 1
+                except OSError as e:
+                        flag = 1
+                if flag == 1:
+                    hmmJobs.append([hmmFile, ogFasta, groupID])
 
     ### create MSAs and pHMMs
     print("Calculating MSAs and pHMMs for %s OGs..." % (len(alignJobs)))
