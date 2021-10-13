@@ -51,7 +51,7 @@ def concatFasta(fileIn, fileOut):
      subprocess.call([replacePipe], shell = True)
 
 def main():
-    version = "0.2.0"
+    version = "0.2.1"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')
@@ -141,7 +141,6 @@ def main():
             fileInBlast = "%s/blast_dir/%s/%s.fa" % (outPath, specName, specName)
             if not Path(fileInBlast).exists():
                 os.symlink(fileInGenome, fileInBlast)
-            Path(outPath + "/weight_dir/" + specName).mkdir(parents = True, exist_ok = True)
             # get info for blast
             blastDbFile = "%s/blast_dir/%s/%s.phr" % (outPath, specName, specName)
             if not Path(blastDbFile).exists():
