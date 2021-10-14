@@ -140,7 +140,8 @@ def main():
                 concatFasta(specFile, fileInGenome)
             fileInBlast = "%s/blast_dir/%s/%s.fa" % (outPath, specName, specName)
             if not Path(fileInBlast).exists():
-                os.symlink(fileInGenome, fileInBlast)
+                fileInGenomeMod = "../../genome_dir/%s/%s.fa" % (specName, specName)
+                os.symlink(fileInGenomeMod, fileInBlast)
             # get info for blast
             blastDbFile = "%s/blast_dir/%s/%s.phr" % (outPath, specName, specName)
             if not Path(blastDbFile).exists():
