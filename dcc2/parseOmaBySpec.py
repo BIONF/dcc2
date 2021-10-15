@@ -165,7 +165,7 @@ def parseOma(args):
     pool.close()
 
 def main():
-    version = "0.2.2"
+    version = "0.2.3"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     required.add_argument('-n', '--name', help='List of OMA species abbr. names', action='store', default='', required=True)

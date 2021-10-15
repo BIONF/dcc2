@@ -52,7 +52,7 @@ def concatFasta(fileIn, fileOut):
      subprocess.call([replacePipe], shell = True)
 
 def main():
-    version = "0.2.2"
+    version = "0.2.3"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')
@@ -135,7 +135,7 @@ def main():
             # read fasta file to dictionary
             fasta[specName] = SeqIO.to_dict(SeqIO.parse(open(specFile),'fasta'))
 
-            # copy to genome_dir/specName/specName.fa and make smybolic link to blast_dir/specName, weight_dir/specName
+            # copy to genome_dir/specName/specName.fa and make smybolic link to blast_dir/specName
             fileInGenome = "%s/genome_dir/%s/%s.fa" % (outPath, specName, specName)
             if not Path(fileInGenome).exists():
                 concatFasta(specFile, fileInGenome)
@@ -150,7 +150,7 @@ def main():
             # get info for blast
             blastDbFile = "%s/blast_dir/%s/%s.phr" % (outPath, specName, specName)
             if not Path(blastDbFile).exists():
-                blastJobs.append([specName, specFile, outPath])
+                blastJobs.append([specName, fileInBlast, outPath])
             # get info for FAS annotation
             annoFile = "%s/weight_dir/%s.json" % (outPath, specName)
             if not Path(annoFile).exists():
