@@ -191,14 +191,19 @@ def runMsa(args):
             sys.exit('Error running %s' % alignCmd)
 
 def calcAnnoFas(specFile, outPath, cpus):
-    from greedyFAS.annoFAS import annoFAS
-    pathconfigfile = annoFAS.__file__.replace('annoFAS/annoFAS.py', 'pathconfig.txt')
-    if os.path.exists(pathconfigfile):
-        with open(pathconfigfile) as f:
-            toolpath = f.readline().strip()
-        try:
-            annoFAS.runAnnoFas([specFile, outPath + '/weight_dir', toolpath, False, specFile.split('/')[-1].split('.')[0], 0.0000001, "euk", 0.001, 0.01, 1, '', '', '', cpus])
-        except:
-            sys.exit('Error running annoFAS!')
-    else:
-        sys.exit('Path config file of greedyFAS not found. Did you run prepareFAS?')
+    annoFasCmd = 'fas.doAnno --fasta %s --outPath %s --cpus %s' % (specFile, outPath + '/weight_dir', cpus)
+    try:
+        subprocess.call([annoFasCmd], shell = True)
+    except:
+        sys.exit('Error running %s' % annoFasCmd)
+    # from greedyFAS.annoFAS import annoFAS
+    # pathconfigfile = annoFAS.__file__.replace('annoFAS/annoFAS.py', 'pathconfig.txt')
+    # if os.path.exists(pathconfigfile):
+    #     with open(pathconfigfile) as f:
+    #         toolpath = f.readline().strip()
+    #     try:
+    #         annoFAS.runAnnoFas([specFile, outPath + '/weight_dir', toolpath, False, specFile.split('/')[-1].split('.')[0], 0.0000001, "euk", 0.001, 0.01, 1, '', '', '', cpus])
+    #     except:
+    #         sys.exit('Error running annoFAS!')
+    # else:
+    #     sys.exit('Path config file of greedyFAS not found. Did you run prepareFAS?')

@@ -32,6 +32,7 @@ import subprocess
 from Bio import SeqIO
 import multiprocessing as mp
 import dcc2.dccFn as dccFn
+from datetime import datetime
 from tqdm import tqdm
 
 def readFileToDict(file):
@@ -49,7 +50,7 @@ def concatFasta(fileIn, fileOut):
      subprocess.call([cmd], shell = True)
 
 def main():
-    version = "0.2.1"
+    version = "0.2.2"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')
@@ -135,6 +136,10 @@ def main():
         if not Path(fileInBlast).exists():
             fileInGenomeMod = "../../genome_dir/%s/%s.fa" % (specName, specName)
             os.symlink(fileInGenomeMod, fileInBlast)
+        # write .checked file
+        checkedFile = dccFn.openFileToWrite("%s/genome_dir/%s/%s.fa.checked" % (outPath, specName, specName))
+        checkedFile.write(str(datetime.now()))
+        checkedFile.close()
         # get info for blast
         blastDbFile = "%s/blast_dir/%s/%s.phr" % (outPath, specName, specName)
         if not Path(blastDbFile).exists():
