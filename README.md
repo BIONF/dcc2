@@ -79,7 +79,7 @@ dcc2.parseOrthoxml -i input.orthoxml -m mapping_file.txt -g /path/to/gene/set -o
 One can also limit the taxa included in the ortholog groups, if not all the taxa in the orthoXML file are needed. In this case, just reduce the taxon mapping file to contain only required taxa and use this function:
 
 ```
-dcc2.parseOrthoxmlCustom -i input.orthoxml -m mapping_file_reduced.txt -g /path/to/gene/set -o /output/path/ -j jobName --annoFas --cpus 8 --minTaxa 10
+dcc2.parseOrthoxmlCustom -i input.orthoxml -m mapping_file_reduced.txt -g /path/to/gene/set -o /output/path/ -j jobName --annoFas --cpus 8 [--minTaxa 10]
 ```
 
 *--minTaxa* defines the minimum number of taxa should be included in each ortholog group.
