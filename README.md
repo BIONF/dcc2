@@ -44,27 +44,27 @@ After installing *dcc2*, you need to run the prepare script to download and pars
 
 You can do it by running this command
 ```
-dcc2.prepare -o /output/path/for/oma/data
+dcc.prepare -o /output/path/for/oma/data
 ```
 
 # Usage
 
 For parsing OMA orthologs by using an OMA group ID:
 ```
-dcc2.parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o /output/path/ -j jobName --cpus 8
+dcc.parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o /output/path/ -j jobName --cpus 8
 ```
 
 Or using list of OMA taxa:
 
 ```
-dcc2.parseOmaBySpec -n HUMAN,ECOLI,YEAST -o /output/path/ -j jobName --annoFas --cpus 8 [--missingTaxa 1]
+dcc.parseOmaBySpec -n HUMAN,ECOLI,YEAST -o /output/path/ -j jobName --annoFas --cpus 8 [--missingTaxa 1]
 ```
 
 *--missingTaxa* deinfies the number of taxa that are allowed to be absent in each ortholog group.
 
 If only 2 OMA taxa are given, you can choose to use OMA pairs instead of OMA groups:
 ```
-dcc2.parseOmaBySpec -n HUMAN,ECOLI -t pair -o /output/path/ -j jobName --annoFAS --cpus 8
+dcc.parseOmaBySpec -n HUMAN,ECOLI -t pair -o /output/path/ -j jobName --annoFAS --cpus 8
 ```
 
 For parsing an output from OMA-standalone or an OrthoXML file, dcc2 requires:
@@ -74,12 +74,12 @@ For parsing an output from OMA-standalone or an OrthoXML file, dcc2 requires:
 - protein set of included taxa. In case of OMA, this can be either given as a folder, or automatically downloaded from OMA database
 
 ```
-dcc2.parseOrthoxml -i input.orthoxml -m mapping_file.txt -g /path/to/gene/set -o /output/path/ -j jobName --annoFas --cpus 8
+dcc.parseOrthoxml -i input.orthoxml -m mapping_file.txt -g /path/to/gene/set -o /output/path/ -j jobName --annoFas --cpus 8
 ```
 One can also limit the taxa included in the ortholog groups, if not all the taxa in the orthoXML file are needed. In this case, just reduce the taxon mapping file to contain only required taxa and use this function:
 
 ```
-dcc2.parseOrthoxmlCustom -i input.orthoxml -m mapping_file_reduced.txt -g /path/to/gene/set -o /output/path/ -j jobName --annoFas --cpus 8 [--minTaxa 10]
+dcc.parseOrthoxmlCustom -i input.orthoxml -m mapping_file_reduced.txt -g /path/to/gene/set -o /output/path/ -j jobName --annoFas --cpus 8 [--minTaxa 10]
 ```
 
 *--minTaxa* defines the minimum number of taxa should be included in each ortholog group.
