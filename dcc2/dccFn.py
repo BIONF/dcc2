@@ -71,8 +71,8 @@ def openFileToAppend(location):
     file = open(location, "a+")
     return file
 
-def makeOneSeqSpeciesName(code,TaxId):
-    name = code + "@" + TaxId + "@" + "1"
+def makeOneSeqSpeciesName(code,TaxId,ver):
+    name = code + "@" + TaxId + "@" + ver #"1"
     return name
 
 def createHeaderCoreFasta(protId, speciesHeader, omaGroupId):

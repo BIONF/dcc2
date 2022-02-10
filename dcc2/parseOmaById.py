@@ -75,7 +75,7 @@ def parseOma(args):
     blastJobs = []
     annoJobs = []
     for i in range(0,len(speciesList)):
-        fileName = dccFn.makeOneSeqSpeciesName(speciesList[i], speciesTaxId[i])
+        fileName = dccFn.makeOneSeqSpeciesName(speciesList[i], speciesTaxId[i], jobName)
         specFile = outPath+"/genome_dir/"+fileName+"/"+fileName+".fa"
         fasta[speciesList[i]] = SeqIO.to_dict(SeqIO.parse(open(specFile),'fasta'))
         # get info for BLAST
@@ -134,7 +134,7 @@ def parseOma(args):
     pool.close()
 
 def main():
-    version = "0.2.3"
+    version = "0.3.0"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     required.add_argument('-g', '--OG', help='Input one OMA group ID', action='store', default='', required=True)
