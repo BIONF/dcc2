@@ -52,7 +52,7 @@ def concatFasta(fileIn, fileOut):
      subprocess.call([replacePipe], shell = True)
 
 def main():
-    version = "0.3.0"
+    version = "0.3.1"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('additional arguments')
@@ -61,6 +61,7 @@ def main():
     required.add_argument('-g', '--geneSet', help='Path to gene set folder', action='store', default='', required=True)
     required.add_argument('-m', '--mappingFile', help='NCBI taxon ID mapping file', action='store', default='', required=True)
     required.add_argument('-j', '--jobName', help='Job name', action='store', default='', required=True)
+    optional.add_argument('-v', '--version', help='Data version. Default: YYMM', action='store', default='')
     optional.add_argument('-a', '--alignTool', help='Alignment tool (mafft|muscle). Default: mafft', action='store', default='mafft')
     optional.add_argument('-f', '--annoFas', help='Perform FAS annotation', action='store_true')
     optional.add_argument('-l', '--maxGroups', help='Maximum ortholog groups taken into account.', type=int, action='store', default=999999999)
@@ -86,6 +87,9 @@ def main():
     minTaxa = args.minTaxa
     doAnno = args.annoFas
     jobName = args.jobName
+    ver = args.version
+    if ver == '':
+        ver = datetime.today().strftime("%y%m")
     cpus = args.cpus
 
     start = time.time()
@@ -125,7 +129,7 @@ def main():
         # if not specNameOri in name2abbr:
         #     sys.exit("%s not found in %s" % (specNameOri, mappingFile))
         if specNameOri in name2abbr:
-            specName = "%s@%s@1" % (name2abbr[specNameOri], name2id[specNameOri])
+            specName = "%s@%s@%s" % (name2abbr[specNameOri], name2id[specNameOri], ver)
             Path(outPath + "/genome_dir/" + specName).mkdir(parents = True, exist_ok = True)
             Path(outPath + "/blast_dir/" + specName).mkdir(parents = True, exist_ok = True)
             # get gene set file

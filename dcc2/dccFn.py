@@ -72,6 +72,8 @@ def openFileToAppend(location):
     return file
 
 def makeOneSeqSpeciesName(code,TaxId,ver):
+    if ver == '':
+        ver = datetime.today().strftime("%y%m")
     name = code + "@" + TaxId + "@" + ver #"1"
     return name
 
@@ -89,7 +91,7 @@ def getTaxonId(dataPath, speciesCode):
 
 # get gene set and save to genome_dir
 # NOTE: speciesCode and speciesTaxId are lists, not single string
-def getGeneset(dataPath, speciesCode, speciesTaxId, outPath):
+def getGeneset(dataPath, speciesCode, speciesTaxId, outPath, ver):
     Path(outPath).mkdir(parents = True, exist_ok = True)
     Path(outPath+"/genome_dir").mkdir(parents = True, exist_ok = True)
 
@@ -99,7 +101,7 @@ def getGeneset(dataPath, speciesCode, speciesTaxId, outPath):
         sequence_dic = json.load(f)
 
     for i in range(0,len(speciesCode)):
-        name = makeOneSeqSpeciesName(speciesCode[i], speciesTaxId[i])
+        name = makeOneSeqSpeciesName(speciesCode[i], speciesTaxId[i], ver)
         Path(outPath+"/genome_dir/"+name).mkdir(parents = True, exist_ok = True)
         if not Path(outPath+"/genome_dir/"+name+"/"+name+".fa").exists():
             toDo.append(i)
@@ -113,7 +115,7 @@ def getGeneset(dataPath, speciesCode, speciesTaxId, outPath):
 
     print('Getting genomes...')
     for j in tqdm(range(0,len(toDo)), total = len(toDo)):
-        name = makeOneSeqSpeciesName(speciesCode[toDo[j]], speciesTaxId[toDo[j]])
+        name = makeOneSeqSpeciesName(speciesCode[toDo[j]], speciesTaxId[toDo[j]], ver)
         newFile = openFileToWrite(outPath + "/genome_dir/" + name + "/" + name + ".fa")
         startLine = sequence_dic[speciesCode[toDo[j]]][0]
         endLine = sequence_dic[speciesCode[toDo[j]]][1]
@@ -136,8 +138,10 @@ def getGeneset(dataPath, speciesCode, speciesTaxId, outPath):
         checkedFile.close()
 
 def getOGseq(args):
-    (proteinIds, omaGroupId, outPath, allFasta, specName2id, jobName) = args
+    (proteinIds, omaGroupId, outPath, allFasta, specName2id, jobName, ver) = args
     ogFasta = outPath + "/core_orthologs/" + jobName + "/" + omaGroupId + "/" + omaGroupId
+    if ver == '':
+        ver = datetime.today().strftime("%y%m")
     flag = 1
     if Path(ogFasta + ".fa").exists():
         tmp = SeqIO.to_dict(SeqIO.parse(open(ogFasta + ".fa"),'fasta'))
@@ -149,7 +153,7 @@ def getOGseq(args):
                 spec = protId[0:5]
                 try:
                     seq = str(allFasta[spec][protId].seq)
-                    header = '>%s|%s@%s@1|%s' % (omaGroupId, spec, specName2id[spec], protId)
+                    header = '>%s|%s@%s@%s|%s' % (omaGroupId, spec, specName2id[spec], ver, protId)
                     myfile.write(header + "\n" + seq + "\n")
                 except:
                     print("%s not found in %s gene set" % (protId, spec))

@@ -32,6 +32,7 @@ import multiprocessing as mp
 from omadb import Client
 import dcc2.dccFn as dccFn
 from tqdm import tqdm
+from datetime import datetime
 
 def gettingOmaGroups(dataPath, speciesSet, nr):
     omaGroupFull = dccFn.openFileToRead(dataPath + "/oma-groups.txt")
@@ -68,7 +69,7 @@ def gettingOmaPairs(speciesList):
     return(out)
 
 def parseOma(args):
-    (speciesList, speciesTaxId, outPath, jobName, nrMissingTaxa, omaType, aligTool, doAnno, cpus, dataPath) = args
+    (speciesList, speciesTaxId, outPath, jobName, nrMissingTaxa, omaType, aligTool, doAnno, cpus, dataPath, ver) = args
     # create job pool
     pool = mp.Pool(cpus)
     if cpus > (mp.cpu_count()):
@@ -80,7 +81,7 @@ def parseOma(args):
 
     ### Get genesets
     print("Getting %s gene sets..." % (len(speciesList)))
-    dccFn.getGeneset(dataPath, speciesList, speciesTaxId, outPath)
+    dccFn.getGeneset(dataPath, speciesList, speciesTaxId, outPath, ver)
 
     # read fasta file to dictionary
     fasta = {}
@@ -88,7 +89,7 @@ def parseOma(args):
     annoJobs = []
     print("Loading fasta files...")
     for i in tqdm(range(0,len(speciesList))):
-        fileName = dccFn.makeOneSeqSpeciesName(speciesList[i], speciesTaxId[i], jobName)
+        fileName = dccFn.makeOneSeqSpeciesName(speciesList[i], speciesTaxId[i], ver)
         specFile = outPath+"/genome_dir/"+fileName+"/"+fileName+".fa"
         fasta[speciesList[i]] = SeqIO.to_dict(SeqIO.parse(open(specFile),'fasta'))
         # get info for BLAST
@@ -121,7 +122,7 @@ def parseOma(args):
         # Path(outPath + "/core_orthologs/" + omaGroupId).mkdir(parents = True, exist_ok = True)
         Path(outPath + "/core_orthologs/" + jobName + "/" + omaGroupId + "/hmm_dir").mkdir(parents = True, exist_ok = True)
         # getSeqJobs.append([omaGroups[omaGroupId], omaGroupId, outPath, fasta])  # slower than run sequentially
-        dccFn.getOGseq([omaGroups[omaGroupId], omaGroupId, outPath, fasta, specName2id, jobName])
+        dccFn.getOGseq([omaGroups[omaGroupId], omaGroupId, outPath, fasta, specName2id, jobName, ver])
 
         ogFasta = outPath + "/core_orthologs/" + jobName + "/" + omaGroupId + "/" + omaGroupId
         ### get MSA jobs
@@ -165,13 +166,14 @@ def parseOma(args):
     pool.close()
 
 def main():
-    version = "0.3.0"
+    version = "0.3.1"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     required.add_argument('-n', '--name', help='List of OMA species abbr. names', action='store', default='', required=True)
     required.add_argument('-o', '--outPath', help='Path to output directory', action='store', default='', required=True)
     required.add_argument('-j', '--jobName', help='Job name', action='store', default='', required=True)
     optional = parser.add_argument_group('additional arguments')
+    optional.add_argument('-v', '--version', help='Data version. Default: YYMM', action='store', default='')
     optional.add_argument('-d', '--dataPath', help='Path to OMA Browser data', action='store', default='')
     optional.add_argument('-m', '--missingTaxa', help='Number of allowed missing taxa. Default: 0', action='store', default=0, type=int)
     optional.add_argument('-t', '--omaType', help='OMA type (group|pair). Default: "group"', choices=['group', 'pair'], action='store', default='group')
@@ -183,6 +185,9 @@ def main():
     speciesList = str(args.name.upper()).split(",")
     outPath = os.path.abspath(args.outPath)
     jobName = args.jobName
+    ver = args.version
+    if ver == '':
+        ver = datetime.today().strftime("%y%m")
     nrMissingTaxa = args.missingTaxa
     omaType = args.omaType
     aligTool = args.alignTool.lower()
@@ -223,7 +228,7 @@ def main():
     Path(outPath + "/weight_dir").mkdir(parents = True, exist_ok = True)
 
     # do parsing
-    parseOma([speciesList, speciesTaxId, outPath, jobName, nrMissingTaxa, omaType, aligTool, doAnno, cpus, dataPath])
+    parseOma([speciesList, speciesTaxId, outPath, jobName, nrMissingTaxa, omaType, aligTool, doAnno, cpus, dataPath, ver])
     end = time.time()
     print("Finished in " + '{:5.3f}s'.format(end-start))
     print("Output can be found at %s" % outPath)

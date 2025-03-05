@@ -31,6 +31,7 @@ from Bio import SeqIO
 import multiprocessing as mp
 from tqdm import tqdm
 import dcc2.dccFn as dccFn
+from datetime import datetime
 
 def getOriOG(dataPath, omaGroupId):
     fileGroups = dccFn.openFileToRead(dataPath + "/oma-groups.txt")
@@ -56,7 +57,7 @@ def getOGprot(omaGroup, speciesList):
     return(proteinIds)
 
 def parseOma(args):
-    (omaGroup, omaGroupId, speciesList, speciesTaxId, outPath, jobName, aligTool, doAnno, cpus, dataPath) = args
+    (omaGroup, omaGroupId, speciesList, speciesTaxId, outPath, jobName, aligTool, doAnno, cpus, dataPath, ver) = args
     # create job pool
     pool = mp.Pool(cpus)
     if cpus > (mp.cpu_count()):
@@ -68,14 +69,14 @@ def parseOma(args):
 
     ### Get genesets
     print("Getting %s gene sets..." % (len(speciesList)))
-    dccFn.getGeneset(dataPath, speciesList, speciesTaxId, outPath)
+    dccFn.getGeneset(dataPath, speciesList, speciesTaxId, outPath, ver)
 
     # read fasta file to dictionary
     fasta = {}
     blastJobs = []
     annoJobs = []
     for i in range(0,len(speciesList)):
-        fileName = dccFn.makeOneSeqSpeciesName(speciesList[i], speciesTaxId[i], jobName)
+        fileName = dccFn.makeOneSeqSpeciesName(speciesList[i], speciesTaxId[i], ver)
         specFile = outPath+"/genome_dir/"+fileName+"/"+fileName+".fa"
         fasta[speciesList[i]] = SeqIO.to_dict(SeqIO.parse(open(specFile),'fasta'))
         # get info for BLAST
@@ -100,7 +101,7 @@ def parseOma(args):
     ### get OG fasta
     print("Getting OMA OG id %s..." % omaGroupId)
     proteinIds = getOGprot(omaGroup, speciesList)
-    dccFn.getOGseq([proteinIds, omaGroupId, outPath, fasta, specName2id, jobName])
+    dccFn.getOGseq([proteinIds, omaGroupId, outPath, fasta, specName2id, jobName, ver])
 
     ### calculate MSAs and pHMMs
     ogFasta = outPath + "/core_orthologs/" + jobName +  "/" + omaGroupId + "/" + omaGroupId
@@ -134,7 +135,7 @@ def parseOma(args):
     pool.close()
 
 def main():
-    version = "0.3.0"
+    version = "0.3.1"
     parser = argparse.ArgumentParser(description="You are running dcc2 version " + str(version))
     required = parser.add_argument_group('required arguments')
     required.add_argument('-g', '--OG', help='Input one OMA group ID', action='store', default='', required=True)
@@ -142,6 +143,7 @@ def main():
     required.add_argument('-o', '--outPath', help='Path to output directory', action='store', default='', required=True)
     required.add_argument('-j', '--jobName', help='Job name', action='store', default='', required=True)
     optional = parser.add_argument_group('additional arguments')
+    optional.add_argument('-v', '--version', help='Data version. Default: YYMM', action='store', default='')
     optional.add_argument('-d', '--dataPath', help='Path to OMA Browser data', action='store', default='')
     optional.add_argument('-a', '--alignTool', help='Alignment tool (mafft|muscle). Default: mafft', choices=['mafft', 'muscle'], action='store', default='mafft')
     optional.add_argument('-f', '--annoFas', help='Perform FAS annotation', action='store_true')
@@ -154,6 +156,9 @@ def main():
     aligTool = args.alignTool.lower()
     doAnno = args.annoFas
     jobName = args.jobName
+    ver = args.version
+    if ver == '':
+        ver = datetime.today().strftime("%y%m")
     cpus = args.cpus
 
     start = time.time()
@@ -193,7 +198,7 @@ def main():
 
     # do parsing
 
-    parseOma([omaGroup, omaGroupId, validSpecList, speciesTaxId, outPath, jobName, aligTool, doAnno, cpus, dataPath])
+    parseOma([omaGroup, omaGroupId, validSpecList, speciesTaxId, outPath, jobName, aligTool, doAnno, cpus, dataPath, ver])
     end = time.time()
     print("Finished in " + '{:5.3f}s'.format(end-start))
     print("Output can be found at %s" % outPath)
