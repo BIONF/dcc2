@@ -85,7 +85,7 @@ def main():
     jobName = args.jobName
     ver = args.version
     if ver == '':
-        ver = date.today().strftime("%y%m")
+        ver = datetime.today().strftime("%y%m")
     cpus = args.cpus
 
     start = time.time()
