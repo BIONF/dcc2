@@ -39,8 +39,8 @@ jobs:
         pwd
         pip install .
         dcc.prepare -o .
-        dcc.parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o ./dcc -j test1 --cpus 8
-        dcc.parseOmaBySpec -n HUMAN,ECOLI,YEAST -o ./dcc -j test2 --cpus 8
+        dcc.parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o ./dcc -j test1 -d /home/runner/work/dcc2/dcc2 --cpus 8
+        dcc.parseOmaBySpec -n HUMAN,ECOLI,YEAST -o ./dcc -j test2 -d /home/runner/work/dcc2/dcc2 --cpus 8
     - name: Deploy
       if: startsWith(github.event.ref, 'refs/tags')
       uses: casperdcl/deploy-pypi@v2
