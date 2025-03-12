@@ -77,14 +77,14 @@ def parseOma(args):
     annoJobs = []
     for i in range(0,len(speciesList)):
         fileName = dccFn.makeOneSeqSpeciesName(speciesList[i], speciesTaxId[i], ver)
-        specFile = outPath+"/genome_dir/"+fileName+"/"+fileName+".fa"
+        specFile = outPath+"/searchTaxa_dir/"+fileName+"/"+fileName+".fa"
         fasta[speciesList[i]] = SeqIO.to_dict(SeqIO.parse(open(specFile),'fasta'))
         # get info for BLAST
-        blastDbFile = "%s/blast_dir/%s/%s.phr" % (outPath, fileName, fileName)
+        blastDbFile = "%s/coreTaxa_dir/%s/%s.phr" % (outPath, fileName, fileName)
         if not Path(blastDbFile).exists():
             blastJobs.append([fileName, specFile, outPath])
         # get info for FAS annotation
-        annoFile = "%s/weight_dir/%s.json" % (outPath, fileName)
+        annoFile = "%s/annotation_dir/%s.json" % (outPath, fileName)
         if not Path(annoFile).exists():
             annoJobs.append(specFile)
 
@@ -191,10 +191,10 @@ def main():
 
     # create output folders
     print("Creating output folders...")
-    Path(outPath + "/genome_dir").mkdir(parents = True, exist_ok = True)
-    Path(outPath + "/blast_dir").mkdir(parents = True, exist_ok = True)
+    Path(outPath + "/searchTaxa_dir").mkdir(parents = True, exist_ok = True)
+    Path(outPath + "/coreTaxa_dir").mkdir(parents = True, exist_ok = True)
     Path(outPath + "/core_orthologs/" + jobName +  "/" + omaGroupId + "/hmm_dir").mkdir(parents = True, exist_ok = True)
-    Path(outPath + "/weight_dir").mkdir(parents = True, exist_ok = True)
+    Path(outPath + "/annotation_dir").mkdir(parents = True, exist_ok = True)
 
     # do parsing
 

@@ -43,7 +43,8 @@ setup(
         'omadb',
         'pyfaidx',
         'tqdm',
-        'greedyFAS'
+        'greedyFAS',
+        'requests'
     ],
     entry_points={
         'console_scripts': ["dcc.prepare = dcc2.prepareDcc:main",

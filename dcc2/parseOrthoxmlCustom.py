@@ -115,12 +115,12 @@ def main():
     fasta = {}
 
     ### create output folders
-    Path(outPath + "/genome_dir").mkdir(parents = True, exist_ok = True)
-    Path(outPath + "/blast_dir").mkdir(parents = True, exist_ok = True)
+    Path(outPath + "/searchTaxa_dir").mkdir(parents = True, exist_ok = True)
+    Path(outPath + "/coreTaxa_dir").mkdir(parents = True, exist_ok = True)
     Path(outPath + "/core_orthologs/" + jobName).mkdir(parents = True, exist_ok = True)
-    Path(outPath + "/weight_dir").mkdir(parents = True, exist_ok = True)
+    Path(outPath + "/annotation_dir").mkdir(parents = True, exist_ok = True)
 
-    ### copy species to genome_dir, blast_dir, weight_dir
+    ### copy species to searchTaxa_dir, coreTaxa_dir, annotation_dir
     print("Getting gene sets...")
     blastJobs = []
     annoJobs = []
@@ -130,8 +130,8 @@ def main():
         #     sys.exit("%s not found in %s" % (specNameOri, mappingFile))
         if specNameOri in name2abbr:
             specName = "%s@%s@%s" % (name2abbr[specNameOri], name2id[specNameOri], ver)
-            Path(outPath + "/genome_dir/" + specName).mkdir(parents = True, exist_ok = True)
-            Path(outPath + "/blast_dir/" + specName).mkdir(parents = True, exist_ok = True)
+            Path(outPath + "/searchTaxa_dir/" + specName).mkdir(parents = True, exist_ok = True)
+            Path(outPath + "/coreTaxa_dir/" + specName).mkdir(parents = True, exist_ok = True)
             # get gene set file
             lsCmd = 'ls %s/%s.*' % (dataPath, specNameOri)
             specFile = subprocess.check_output([lsCmd], shell = True).decode(sys.stdout.encoding).strip()
@@ -139,24 +139,24 @@ def main():
             # read fasta file to dictionary
             fasta[specName] = SeqIO.to_dict(SeqIO.parse(open(specFile),'fasta'))
 
-            # copy to genome_dir/specName/specName.fa and make smybolic link to blast_dir/specName
-            fileInGenome = "%s/genome_dir/%s/%s.fa" % (outPath, specName, specName)
+            # copy to searchTaxa_dir/specName/specName.fa and make smybolic link to coreTaxa_dir/specName
+            fileInGenome = "%s/searchTaxa_dir/%s/%s.fa" % (outPath, specName, specName)
             if not Path(fileInGenome).exists():
                 concatFasta(specFile, fileInGenome)
-            fileInBlast = "%s/blast_dir/%s/%s.fa" % (outPath, specName, specName)
+            fileInBlast = "%s/coreTaxa_dir/%s/%s.fa" % (outPath, specName, specName)
             if not Path(fileInBlast).exists():
-                fileInGenomeMod = "../../genome_dir/%s/%s.fa" % (specName, specName)
+                fileInGenomeMod = "../../searchTaxa_dir/%s/%s.fa" % (specName, specName)
                 os.symlink(fileInGenomeMod, fileInBlast)
             # write .checked file
-            checkedFile = dccFn.openFileToWrite("%s/genome_dir/%s/%s.fa.checked" % (outPath, specName, specName))
+            checkedFile = dccFn.openFileToWrite("%s/searchTaxa_dir/%s/%s.fa.checked" % (outPath, specName, specName))
             checkedFile.write(str(datetime.now()))
             checkedFile.close()
             # get info for blast
-            blastDbFile = "%s/blast_dir/%s/%s.phr" % (outPath, specName, specName)
+            blastDbFile = "%s/coreTaxa_dir/%s/%s.phr" % (outPath, specName, specName)
             if not Path(blastDbFile).exists():
                 blastJobs.append([specName, fileInBlast, outPath])
             # get info for FAS annotation
-            annoFile = "%s/weight_dir/%s.json" % (outPath, specName)
+            annoFile = "%s/annotation_dir/%s.json" % (outPath, specName)
             if not Path(annoFile).exists():
                 annoJobs.append(specFile)
 

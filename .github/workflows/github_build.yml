@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.12]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -38,7 +38,9 @@ jobs:
       run: |
         pwd
         pip install .
-        dcc.prepare -h
+        dcc.prepare -o .
+        dcc.parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o ./dcc -j test1 --cpus 8
+        dcc.parseOmaBySpec -n HUMAN,ECOLI,YEAST -o ./dcc -j test2 --cpus 8
     - name: Deploy
       if: startsWith(github.event.ref, 'refs/tags')
       uses: casperdcl/deploy-pypi@v2

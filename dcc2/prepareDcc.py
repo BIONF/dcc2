@@ -33,7 +33,7 @@ import shutil
 import gzip
 import argparse
 import ssl
-import urllib.request
+import requests
 import time
 from tqdm import tqdm
 import dcc2.dccFn as dccFn
@@ -59,31 +59,20 @@ def query_yes_no(question, default='yes'):
             sys.stdout.write('Please respond with "yes" or "no" '
                              '(or "y" or "n").\n')
 
-def download_progress(count, block_size, total_size):
-    global start_time
-    if count == 0:
-        start_time = time.time()
-        return
-    duration = time.time() - start_time
-    progress_size = int(count * block_size)
-    speed = int(progress_size / (1024 * duration))
-    percent = int(count * block_size * 100 / total_size)
-    if percent > 100:
-        percent = 100
-    sys.stdout.write("\r...%d%%, %d MB, %d KB/s, %d seconds passed" %
-                    (percent, progress_size / (1024 * 1024), speed, duration))
-    sys.stdout.flush()
 
 def download_file(url, file, outDir):
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
-    download_file = urllib.request.URLopener(context=ctx)
-    print('Downloading %s' % (url + '/' + file))
-    download_file.retrieve(url + '/' + file, outDir + '/' + file, download_progress)
-    print(' ... done!')
+    try:
+        response = requests.get(f'{url}/{file}', stream=True, verify=False, allow_redirects=True)
+        response.raise_for_status()  # Raises HTTPError for bad responses (4xx, 5xx)
+        with open(f'{outDir}/{file}', "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+        print(f"Download successful: {file}")
+    except requests.exceptions.RequestException as e:
+        sys.exit(f"ERROR: Unable to download file. Reason: {e}")
 
-def downloadFiles(dataPath, keep):
+
+def download_oma_data(dataPath, keep):
     mainUrl = "https://omabrowser.org/All"
     zipFiles = ['oma-groups.txt.gz', 'oma-seqs.fa.gz']
     specinfo = "oma-species.txt"
@@ -146,7 +135,7 @@ def createDicOmaGroup(omaGroups, file):
 
 def prepareDcc(dataPath, keep):
     start = time.time()
-    downloadFiles(dataPath, keep)
+    download_oma_data(dataPath, keep)
 
     allProteins = open(dataPath + "/oma-seqs.fa", "r")
     newFileSpecies = open(dataPath + "/oma-seqs-dic.fa", "w")
