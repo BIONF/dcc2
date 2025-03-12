@@ -38,12 +38,9 @@ jobs:
       run: |
         pwd
         pip install .
-        dcc.prepare -o .
-        ls /home/runner/work/dcc2/dcc2
-        head /home/runner/work/dcc2/dcc2/oma-species.txt
-        head /home/runner/work/dcc2/dcc2/oma-groups.txt
-        # dcc.parseOmaById -g 1 -n HUMAN,THEAM,DESM0 -o ./dcc -j test1 -d /home/runner/work/dcc2/dcc2 --cpus 8
-        dcc.parseOmaBySpec -n HUMAN,ECOLI,YEAST -o ./dcc -j test2 -d /home/runner/work/dcc2/dcc2
+        dcc.prepare -h
+        dcc.parseOmaById -h
+        dcc.parseOmaBySpec -h
     - name: Deploy
       if: startsWith(github.event.ref, 'refs/tags')
       uses: casperdcl/deploy-pypi@v2
